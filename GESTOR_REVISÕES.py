@@ -6,7 +6,15 @@ import json
 import locale
 
 # Configura a localidade para português do Brasil
-locale.setlocale(locale.LC_TIME, "pt_BR.UTF-8")
+try:
+    # Tente configurar para pt_BR.UTF-8 ou pt_BR
+    locale.setlocale(locale.LC_TIME, "pt_BR.UTF-8")
+except locale.Error:
+    try:
+        locale.setlocale(locale.LC_TIME, "pt_BR")
+    except locale.Error:
+        # Se não estiver disponível, deixe no padrão do sistema
+        pass
 
 # Caminho para os arquivos JSON
 eventos_file = "eventos.json"
