@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import pandas as pd
+import os
 import streamlit as st
 from streamlit_calendar import calendar
 import json
@@ -22,13 +23,22 @@ cancelados_file = "clientes_cancelados.json"
 
 # Carregar lista de clientes
 def carregar_clientes():
-    #caminho no PC Faz Capital: "C:/Users/FAZCAPITAL/OneDrive/lista de contatos.xlsx"
-    #caminho no meu PC: "C:/Users/USER/OneDrive/lista de contatos.xlsx"
-    file_path = "C:/Users/USER/OneDrive/lista de contatos.xlsx"
+    # Use um caminho relativo para o arquivo de Excel
+    file_path = "lista de contatos.xlsx"
+    
+    # Verifica se o arquivo existe antes de tentar carregar
+    if not os.path.exists(file_path):
+        print(f"Erro: O arquivo {file_path} não foi encontrado.")
+        return []  # Retorna uma lista vazia se o arquivo não estiver presente
+
+    # Carrega o arquivo de Excel e extrai os dados da planilha 'Planilha2'
     xls = pd.ExcelFile(file_path)
     planilha2 = pd.read_excel(xls, 'Planilha2')
+    
+    # Filtra e ordena os nomes de clientes encontrados
     nomes_encontrados = list(set(planilha2['a'].dropna().loc[planilha2['a.3'] != "Não encontrado"]))
     lista_clientes = sorted(nomes_encontrados)
+    
     return lista_clientes
 
 # Funções para manipulação de eventos
